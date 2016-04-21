@@ -12,21 +12,20 @@
 	sw $t3,0($t1) 
 .end_macro
 
-.macro borrarPantalla(%t0)
+.macro sleep(%a0)
+	li $v0,32
+	syscall 
+.end_macro
+.macro borrarPantalla(%t0,%t3,%a0)
 	add $t1,$t0,$zero
 	add $t2,$t0,4096
-	li $t3,0x00000000
 loop:
+	sleep($a0)
 	sw $t3,0($t1)
 	add $t1,$t1,4
 	bne $t1,$t2,loop	
 .end_macro
 
-.macro sleep(%t0)
-	add $a0,$a0,$t0
-	li $v0,32
-	syscall 
-.end_macro
 #t0-inicio,t2-pos,t3-color,t4-longitud
 .macro imprimirLineaH(%t0,%t2,%t3,%t4)
 	add $t1,$t2,$zero
