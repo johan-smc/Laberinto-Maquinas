@@ -115,11 +115,11 @@ exit:
 	
 
 .macro jugarMapa1(%t0,%t3)
-	########################################################
+	mapa($t0,$t3)
 	
 .end_macro
 .macro jugarMapa2(%t0,%t3)
-	########################################################
+	mapados($t0,$t3)
 .end_macro
 .macro imprimirWinner()
 	li $t3,NEGRO
