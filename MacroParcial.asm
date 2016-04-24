@@ -111,26 +111,25 @@ exit:
 	lw  $s0,0($t1)
 	sub $s0,$s0,$t3
 .end_macro
-.macro  menu()
-	li $t0,0
+
+	
+
+.macro jugarMapa1(%t0,%t3)
+	########################################################
+	
 .end_macro
-.macro jugarMapa1()
-	li $t3,NEGRO
-	borrarPantalla($t0,$t3,$a0)
-	li $t3,COLOR_JUGADOR
-	inicioJugador($t0,$k1,$t3)
-.end_macro
-.macro jugarMapa2()
-	li $t3,COLOR_BORDE
-	borrarPantalla($t0,$t3,$a0)
+.macro jugarMapa2(%t0,%t3)
+	########################################################
 .end_macro
 .macro imprimirWinner()
 	li $t3,NEGRO
+	li $a0,1
 	borrarPantalla($t0,$t3,$a0)
-	li $t1,55
-	li $t3,COLOR_BORDE
-	puntoColor($t0,$t1,$t3)
-	menu()
+	#####################
+	
+	
+	####################
+	li $t0,0
 .end_macro
 #t0-inicioPantalla,k1-PosicionJugador,v0-movimiento,t3-color
 .macro moverJugador(%t0,%k1,%v0,%t3,%t9)
@@ -155,13 +154,11 @@ exit:
 	add $k1,$k1,$v0
 	add $t1,$k1,$zero
 	puntoColor($t0,$k1,$t3)
-	li $a0,4
-	sleep($a0)
 	beq $s0,0,winner
 	bne $t5,0,reiniciar
 	j sal
 reiniciar:
-	beq $t9,0,rMapa1
+	beq $t9,1,rMapa1
 	jugarMapa2()
 	j sal
 rMapa1:
@@ -176,8 +173,19 @@ sal:
 re:
 	leerDireccion()
 	calcularMovimiento($v0)
-	li $t9,0
 	li $t3,COLOR_JUGADOR
 	moverJugador($t0,$k1,$v0,$t3,$t9)
 	bne $t0,0,re
+.end_macro
+
+.macro principal(%t0,%a1)
+inicio:
+	li $v0,4
+	add $a0,$a1,$zero
+	syscall
+	li $v0,5
+	syscall
+	add $t9,$zero,$v0
+	jugar()
+	j inicio
 .end_macro
