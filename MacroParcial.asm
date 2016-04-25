@@ -1,10 +1,10 @@
-	
+
 	.eqv INICIO_PANTALLA 0xffff0000
-	.eqv COLOR_BORDE 0x00ff0000
 	.eqv COLOR_JUGADOR 0x000000FF
 	.eqv COLOR_META 0x00006400
 	.eqv NEGRO 0x00000000
-	.eqv COLOR_BORDE 0x00ff0000
+	.eqv BASE 0x00ffffff
+	.eqv COLOR_BORDE 0x00000000
 	.eqv AMARILLO 0x00ffff00
 	.eqv BLANCO 0x00ffffff
 	.eqv ROJO 0x00ff0000
@@ -16,18 +16,18 @@
 	sll $t2,$t2,7
 	add $t1,$t1,$t2
 	add $t1,$t0,$t1
-	sw $t3,0($t1) 
+	sw $t3,0($t1)
 .end_macro
 #t0-inicioPantalla,t1-adonde,t3-Color
 .macro puntoColor(%t0,%t1,%t3)
 	mul $t1,$t1,4
 	add $t1,$t0,$t1
-	sw $t3,0($t1) 
+	sw $t3,0($t1)
 .end_macro
 
 .macro sleep(%a0)
 	li $v0,32
-	syscall 
+	syscall
 .end_macro
 .macro borrarPantalla(%t0,%t3,%a0)
 	add $t1,$t0,$zero
@@ -36,7 +36,7 @@ loop:
 	sleep($a0)
 	sw $t3,0($t1)
 	add $t1,$t1,4
-	bne $t1,$t2,loop	
+	bne $t1,$t2,loop
 .end_macro
 
 #t0-inicio,t2-pos,t3-color,t4-longitud
@@ -44,7 +44,7 @@ loop:
 	add $t1,$t2,$zero
 	add $t2,$t2,$t4
 	beq $t4,0,salir
-loop2: 
+loop2:
 	add $t4,$t1,$zero
 	puntoColor($t0,$t1,$t3)
 	add $t1,$t4,1
@@ -57,7 +57,7 @@ salir:
 	mul $t4,$t4,32
 	add $t2,$t2,$t4
 	beq $t4,0,salir
-loop2: 
+loop2:
 	add $t4,$t1,$zero
 	puntoColor($t0,$t1,$t3)
 	add $t1,$t4,32
@@ -120,24 +120,24 @@ exit:
 	sub $s0,$s0,$t3
 .end_macro
 
-	
+
 
 .macro jugarMapa1(%t0,%t3)
-	#li $t3,NEGRO
+	#li $t3,BASE
 	mapa($t0,$t3)
-	
+
 .end_macro
 .macro jugarMapa2(%t0,%t3)
-	#li $t3,NEGRO
+	#li $t3,BASE
 	mapados($t0,$t3)
 .end_macro
 .macro imprimirWinner()
-	li $t3,NEGRO
+	li $t3,BASE
 	li $a0,1
 	borrarPantalla($t0,$t3,$a0)
 	#####################
 	li $t0, INICIO_PANTALLA
-	eltriunfo($t0)	
+	eltriunfo($t0)
 	####################
 	li $t0,0
 .end_macro
@@ -145,28 +145,28 @@ exit:
 .macro moverJugador(%t0,%k1,%v0,%t3,%t9)
 	add $t1,$k1,$v0
 	add $t4,$zero,$t3
-	li $t3,NEGRO
+	li $t3,BASE
 	validar($t0,$t1,$s0,$t3)
 	add $t5,$s0,$zero
 	add $t3,$zero,$t4	###BUENA
-	
-	
+
+
 	add $t1,$k1,$v0
 	add $t4,$zero,$t3
 	li $t3,COLOR_JUGADOR
 	validar($t0,$t1,$s0,$t3)
 	add $t6,$s0,$zero
 	add $t3,$zero,$t4	#JUGADOR
-	
+
 	add $t1,$k1,$v0
 	add $t4,$zero,$t3
 	li $t3,COLOR_META
 	validar($t0,$t1,$s0,$t3)
 	add $t3,$zero,$t4	##GANO
-	
-	
+
+
 	add $t2,$t3,$zero
-	li $t3,NEGRO
+	li $t3,BASE
 	add $t1,$k1,$zero
 	puntoColor($t0,$k1,$t3)
 	add $t3,$t2,$zero
@@ -221,13 +221,13 @@ seguirJugando:
 
 .macro mapa(%t0,%t3)
 
-	li $t3,BLANCO
+	li $t3,BASE
 	li $a0,2
 	borrarPantalla($t0,$t3,$a0)
-	
-	li $t3,NEGRO
+
+	li $t3,COLOR_BORDE
 	borde($t0,$t3)
-	
+
 	##############  2  ####################
 	li $t2,43
 	li $t4,4
@@ -812,14 +812,14 @@ seguirJugando:
 .end_macro
 
 .macro mapados(%t0,%t3)
-	
-	li $t3,BLANCO
+
+	li $t3,BASE
 	li $a0,2
 	borrarPantalla($t0,$t3,$a0)
-	
-	li $t3,NEGRO
+
+	li $t3,COLOR_BORDE
 	borde($t0,$t3)
-	
+
 	li $t1,0
         puntoColor($t0,$t1,$t3)
         li $t1,1
@@ -1811,7 +1811,7 @@ seguirJugando:
 .end_macro
 
 .macro eltriunfo(%t0)
-	
+
 	li $t1,0
         li $t3,BLANCO
         puntoColor($t0,$t1,$t3)
