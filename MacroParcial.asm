@@ -140,11 +140,20 @@ exit:
 	add $t5,$s0,$zero
 	add $t3,$zero,$t4	###BUENA
 	
+	
+	add $t1,$k1,$v0
+	add $t4,$zero,$t3
+	li $t3,COLOR_JUGADOR
+	validar($t0,$t1,$s0,$t3)
+	add $t6,$s0,$zero
+	add $t3,$zero,$t4	#JUGADOR
+	
 	add $t1,$k1,$v0
 	add $t4,$zero,$t3
 	li $t3,COLOR_META
 	validar($t0,$t1,$s0,$t3)
 	add $t3,$zero,$t4	##GANO
+	
 	
 	add $t2,$t3,$zero
 	li $t3,NEGRO
@@ -154,15 +163,16 @@ exit:
 	add $k1,$k1,$v0
 	add $t1,$k1,$zero
 	puntoColor($t0,$k1,$t3)
+	beq $t6,0,sal
 	beq $s0,0,winner
 	bne $t5,0,reiniciar
 	j sal
 reiniciar:
 	beq $t9,1,rMapa1
-	jugarMapa2()
+	jugarMapa2($t0,$t3)
 	j sal
 rMapa1:
-	jugarMapa1()
+	jugarMapa1($t0,$t3)
 	j sal
 winner:
 	imprimirWinner()
@@ -179,20 +189,29 @@ re:
 .end_macro
 
 .macro principal(%t0,%a1)
+	add $a3,$t0,$zero
 inicio:
+	add $t0,$a3,$zero
 	li $v0,4
 	add $a0,$a1,$zero
 	syscall
 	li $v0,5
 	syscall
 	add $t9,$zero,$v0
+	bne $t9,1,mapa2
+	jugarMapa1($t0,$t3)
+	j seguirJugando
+mapa2:
+	jugarMapa2($t0,$t3)
+seguirJugando:
 	jugar()
 	j inicio
 .end_macro
 
 
 .macro mapa(%t0,%t3)
-
+	
+	li $t3,COLOR_BORDE
 	borde($t0,$t3)
 	##############  2  ####################
 	li $t2,43
@@ -769,10 +788,17 @@ inicio:
 	li $t2,975
 	li $t4,2
 	imprimirLineaH($t0,$t2,$t3,$t4)
+	li $k1,33
+	li $t3,COLOR_JUGADOR
+	inicioJugador($t0,$k1,$t3)
+	li $t1,971
+	li $t3,COLOR_META
+	puntoColor($t0,$t1,$t3)
 .end_macro
 
 .macro mapados(%t0,%t3)
-
+	
+	li $t3,COLOR_BORDE
 	borde($t0,$t3)
 	li $t1,0
         puntoColor($t0,$t1,$t3)
@@ -1756,5 +1782,10 @@ inicio:
         puntoColor($t0,$t1,$t3)
         li $t1,999
         puntoColor($t0,$t1,$t3)
-
+	li $k1,33
+	li $t3,COLOR_JUGADOR
+	inicioJugador($t0,$k1,$t3)
+	li $t1,861
+	li $t3,COLOR_META
+	puntoColor($t0,$t1,$t3)
 .end_macro

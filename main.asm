@@ -5,11 +5,11 @@
 	.eqv COLOR_BORDE 0x00ff0000
 	.eqv COLOR_JUGADOR 0x00ffffff
 	.eqv COLOR_META 0x00FFFACD
-pal:	.asciiz "Laberinto 1 o 2 \n" 
+frase:	.asciiz "\nLaberinto 1 o 2 \n" 
 	.text
 main:
 	li $t0,INICIO_PANTALLA
-	li $a1,pal
-	principal()
+	la $a1,frase
+	principal($t0,$a1)
 	
 	
